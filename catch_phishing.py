@@ -134,7 +134,7 @@ def callback(message, context):
                     "[+] Potential : "
                     "{} (score={})".format(colored(domain, attrs=['underline']), score))
 
-            if score >= 75:
+            if score >= 110:
                 with open(log_suspicious, 'a') as f:
                     f.write("{},score={}\n".format(domain,score))
 
