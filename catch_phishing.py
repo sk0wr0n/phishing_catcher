@@ -23,6 +23,7 @@ from tld import get_tld
 
 from confusables import unconfuse
 
+#test
 certstream_url = 'wss://certstream.calidog.io'
 
 log_suspicious = os.path.dirname(os.path.realpath(__file__))+'/suspicious_domains_'+time.strftime("%Y-%m-%d")+'.log'
