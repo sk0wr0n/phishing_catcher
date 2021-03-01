@@ -142,14 +142,20 @@ def callback(message, context):
                     "{} (score={})".format(colored(domain, attrs=['underline']), score))
 
             if score >= 110:
-# How to look like 
-#INSERT INTO `detect` (`id`, `domain`, `issuer`, `timedate`) VALUES (NULL, 'google.com', 'Let`s Encrypt', '2021-02-25 05:16:41');
+	# write to file stay here
+                with open(log_suspicious, 'a') as f:
+                    f.write("{}\n".format(domain))
+	#insert to DB
+	#How to look like correct sql insert
+	#INSERT INTO `detect` (`id`, `domain`, `issuer`, `timedate`) VALUES (NULL, 'google.com', 'Let`s Encrypt', '2021-02-25 05:16:41');
+	#								      ^ NULL -> auto increase in MySQL
                 cursor = db.cursor()
                 cursor.execute('''INSERT into wykrycia (id, domena, wynik, wydawca, data) values (NULL, %s, %s, %s, %s)''',(domain, score, message['data']['leaf_cert']['issuer']['O'],time.strftime("%Y-%m-%d %H:%M:%S")))
                 db.commit()
+	#also added information displayed in the console like other
                 tqdm.tqdm.write(
                     "[+] Added to DB: "
-                    "{} (score={})".format(colored(domain, 'blue', attrs=['underline']), score))
+                    "{} (score={})".format(colored(domain, 'blue', attrs=['underline, bold']), score))
 
 
 if __name__ == '__main__':
