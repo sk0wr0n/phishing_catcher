@@ -29,11 +29,13 @@ Here, a score of `25` is added to the generic keyword `login` when it is found i
 
 However, in order to be reported as suspicious by Phishing Catcher, the score assigned to a given certificate must meet or exceed (`>=`, "greater than or equal to") the following thresholds:
 
+_______________________
 | Score | Reported as  |
 | -----:| ------------ |
 |    65 | `Potential`  |
 |    80 | `Likely`     |
 |    90 | `Suspicious` |
+|______________________|
 
 > :bulb: See the `score_domain()` function in the source code for details regarding the scoring algorithm.
 
