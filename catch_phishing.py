@@ -141,13 +141,13 @@ def callback(message, context):
                     "{} (score={})".format(colored(domain, attrs=['underline']), score))
 
             if score >= 110:
-# TAK MA WYGLADAC
-#INSERT INTO `wykrycia` (`id`, `domena`, `wydawca`, `data`) VALUES (NULL, 'dskjfhsdkjfhsdkfjh', 'ksdjfhksdjhfksjdhfkshdfkjshd', '2021-02-25 05:16:41');
+# How to look like 
+#INSERT INTO `detect` (`id`, `domain`, `issuer`, `timedate`) VALUES (NULL, 'google.com', 'Let`s Encrypt', '2021-02-25 05:16:41');
                 cursor = db.cursor()
                 cursor.execute('''INSERT into wykrycia (id, domena, wynik, wydawca, data) values (NULL, %s, %s, %s, %s)''',(domain, score, message['data']['leaf_cert']['issuer']['O'],time.strftime("%Y-%m-%d %H:%M:%S")))
                 db.commit()
                 tqdm.tqdm.write(
-                    "[+] UWAGA dodano do bazy: "
+                    "[+] Added to DB: "
                     "{} (score={})".format(colored(domain, 'blue', attrs=['underline']), score))
 
 
