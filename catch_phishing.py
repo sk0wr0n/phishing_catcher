@@ -11,7 +11,6 @@
 # GNU General Public License for more details.
 import re
 import math
-
 import certstream
 import tqdm
 import yaml
@@ -20,11 +19,12 @@ import os
 from Levenshtein import distance
 from termcolor import colored, cprint
 from tld import get_tld
-
+from datetime import datetime
 from confusables import unconfuse
+import mysql.connector
+
 
 certstream_url = 'wss://certstream.calidog.io'
-
 log_suspicious = os.path.dirname(os.path.realpath(__file__))+'/suspicious_domains_'+time.strftime("%Y-%m-%d")+'.log'
 
 suspicious_yaml = os.path.dirname(os.path.realpath(__file__))+'/suspicious.yaml'
@@ -32,6 +32,12 @@ suspicious_yaml = os.path.dirname(os.path.realpath(__file__))+'/suspicious.yaml'
 external_yaml = os.path.dirname(os.path.realpath(__file__))+'/external.yaml'
 
 pbar = tqdm.tqdm(desc='certificate_update', unit='cert')
+
+db = mysql.connector.connect(user='root', password='p@ssw0rd!',
+                              host='127.0.0.1', database='phisher',
+                              auth_plugin='mysql_native_password')
+
+
 
 def entropy(string):
     """Calculates the Shannon entropy of a string"""
@@ -135,8 +141,14 @@ def callback(message, context):
                     "{} (score={})".format(colored(domain, attrs=['underline']), score))
 
             if score >= 110:
-                with open(log_suspicious, 'a') as f:
-                    f.write("{},score={}\n".format(domain,score))
+# TAK MA WYGLADAC
+#INSERT INTO `wykrycia` (`id`, `domena`, `wydawca`, `data`) VALUES (NULL, 'dskjfhsdkjfhsdkfjh', 'ksdjfhksdjhfksjdhfkshdfkjshd', '2021-02-25 05:16:41');
+                cursor = db.cursor()
+                cursor.execute('''INSERT into wykrycia (id, domena, wynik, wydawca, data) values (NULL, %s, %s, %s, %s)''',(domain, score, message['data']['leaf_cert']['issuer']['O'],time.strftime("%Y-%m-%d %H:%M:%S")))
+                db.commit()
+                tqdm.tqdm.write(
+                    "[+] UWAGA dodano do bazy: "
+                    "{} (score={})".format(colored(domain, 'blue', attrs=['underline']), score))
 
 
 if __name__ == '__main__':

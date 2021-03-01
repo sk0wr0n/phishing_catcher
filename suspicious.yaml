@@ -103,14 +103,14 @@ keywords:
     'bank': 15
 
 # Ecommerce
-    'amazon': 60
+    'amazon': 30
     'overstock': 60
     'alibaba': 60
     'aliexpress': 60
     'leboncoin': 70
 
 # Other
-    'netflix': 70
+    'netflix': 40
     'skype': 60
     'github': 60
     'onedrive': 60
