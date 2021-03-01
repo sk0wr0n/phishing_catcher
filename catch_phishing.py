@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # Copyright (c) 2017 @x0rz
+# Added support to write to DB @Sk0wr0n
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
