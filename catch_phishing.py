@@ -91,19 +91,19 @@ def score_domain(domain):
             score += suspicious['keywords'][word]
 
     # Testing Levenshtein distance for strong keywords (>= 70 points) (ie. paypol)
-    for key in [k for (k,s) in suspicious['keywords'].items() if s >= 70]:
+#    for key in [k for (k,s) in suspicious['keywords'].items() if s >= 70]:
         # Removing too generic keywords (ie. mail.domain.com)
-        for word in [w for w in words_in_domain if w not in ['email', 'mail', 'cloud']]:
-            if distance(str(word), str(key)) == 1:
-                score += 70
+ #       for word in [w for w in words_in_domain if w not in ['email', 'mail', 'cloud']]:
+  #          if distance(str(word), str(key)) == 1:
+   #             score += 40
 
     # Lots of '-' (ie. www.paypal-datacenter.com-acccount-alert.com)
-    if 'xn--' not in domain and domain.count('-') >= 4:
-        score += domain.count('-') * 3
+   # if 'xn--' not in domain and domain.count('-') >= 4:
+    #    score += domain.count('-') * 3
 
     # Deeply nested subdomains (ie. www.paypal.com.security.accountupdate.gq)
     if domain.count('.') >= 3:
-        score += domain.count('.') * 3
+        score += domain.count('.') * 2
 
     return score
 
@@ -122,7 +122,7 @@ def callback(message, context):
 
             # If issued from a free CA = more suspicious
             if "Let's Encrypt" == message['data']['leaf_cert']['issuer']['O']:
-                score += 10
+                score += 40
 
             if score >= 100:
                 tqdm.tqdm.write(
@@ -141,21 +141,21 @@ def callback(message, context):
                     "[+] Potential : "
                     "{} (score={})".format(colored(domain, attrs=['underline']), score))
 
-            if score >= 110:
+            if score >= 120:
 	# write to file stay here
                 with open(log_suspicious, 'a') as f:
                     f.write("{}\n".format(domain))
 	#insert to DB
-	#How to look like correct sql insert
+	#correct sql insert syntax
 	#INSERT INTO `detect` (`id`, `domain`, `issuer`, `timedate`) VALUES (NULL, 'google.com', 'Let`s Encrypt', '2021-02-25 05:16:41');
 	#								      ^ NULL -> auto increase in MySQL
                 cursor = db.cursor()
-                cursor.execute('''INSERT into wykrycia (id, domena, wynik, wydawca, data) values (NULL, %s, %s, %s, %s)''',(domain, score, message['data']['leaf_cert']['issuer']['O'],time.strftime("%Y-%m-%d %H:%M:%S")))
+                cursor.execute('''INSERT into wykrycia (id, domena, wynik, wydawca, data) values (NULL, %s, %s, %s, %s)''',("<a href=http://"+domain+">"+domain+"</a>", score, message['data']['leaf_cert']['issuer']['O'],time.strftime("%Y-%m-%d %H:%M:%S")))
                 db.commit()
 	#also added information displayed in the console like other
                 tqdm.tqdm.write(
                     "[+] Added to DB: "
-                    "{} (score={})".format(colored(domain, 'blue', attrs=['underline, bold']), score))
+                    "{} (score={})".format(colored(domain, 'blue', attrs=['underline', 'bold']), score))
 
 
 if __name__ == '__main__':
