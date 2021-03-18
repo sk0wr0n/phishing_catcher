@@ -39,10 +39,10 @@ keywords:
 # Bank/money
     'bank': 15
 # Other
-    'netflix': 40
-    'skype': 60
-    'github': 60
-    'onedrive': 60
+#    'netflix': 40
+#    'skype': 60
+#    'github': 60
+#    'onedrive': 60
 tlds:
     '.ga':
     '.cc': #from OLX phishing
